@@ -46,7 +46,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ResponseEntity<Contact> createNewContact(Contact contact, HttpServletRequest request) {
 
-        if(null != contact.getFirstName()) {
+        if(null != contact.getFirstName() && contact.getFirstName().length() > 0) {
             Contact newContact = contactRepository.saveAndFlush(contact);
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("Location", contactUrlHelper(newContact, request));

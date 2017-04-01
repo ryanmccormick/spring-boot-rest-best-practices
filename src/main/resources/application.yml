@@ -1,6 +1,7 @@
 logging.level.root: INFO
 server.port: 8080
 
+# Local dev credentials for mySQL
 spring.datasource:
   url: jdbc:mysql://localhost/springtest
   username: dev

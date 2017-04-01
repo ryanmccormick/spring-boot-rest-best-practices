@@ -89,4 +89,20 @@ public class CreateContactsTest {
         assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType());
     }
 
+    @Test
+    public void createNewContactWithBlankFirstName() {
+        String resourceUrl = "/api/v1/contacts";
+        String firstName = "";
+        String lastName = "Smith";
+        String phone = "555-555-5555";
+
+        JSONObject postBody = testHelper.constructContact(firstName, lastName, phone);
+
+        ResponseEntity<Contact> responseEntity =
+                restTemplate.exchange(resourceUrl, HttpMethod.POST, testHelper.getPostRequestHeaders(postBody.toString()), Contact.class);
+
+        assertEquals(422, responseEntity.getStatusCodeValue());
+        assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType());
+    }
+
 }

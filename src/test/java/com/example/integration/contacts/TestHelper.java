@@ -1,4 +1,4 @@
-package com.example.integration;
+package com.example.integration.contacts;
 
 import com.example.model.Contact;
 import org.json.JSONException;

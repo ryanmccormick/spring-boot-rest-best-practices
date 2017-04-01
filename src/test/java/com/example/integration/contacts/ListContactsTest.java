@@ -1,4 +1,4 @@
-package com.example.integration;
+package com.example.integration.contacts;
 
 import com.example.Repository.ContactRepository;
 import com.example.model.Contact;
@@ -11,9 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 

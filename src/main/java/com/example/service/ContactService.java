@@ -18,6 +18,7 @@ public interface ContactService {
     public ResponseEntity<Contact> createNewContact(Contact contact, HttpServletRequest request);
     public ResponseEntity<Contact> patchUpdateContact(Long id, Contact contactUpdates);
     public ResponseEntity<Contact> putUpdateContact(Long id, Contact contactUpdates);
+    public ResponseEntity<Contact> deleteContact(Long id);
     public String contactUrlHelper(Contact contact, HttpServletRequest request);
 
 }

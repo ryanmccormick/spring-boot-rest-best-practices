@@ -100,6 +100,18 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public ResponseEntity<Contact> deleteContact(Long id) {
+        Contact existingContact = contactRepository.findOne(id);
+
+        if(null != existingContact) {
+            contactRepository.delete(id);
+            return new ResponseEntity<Contact>(HttpStatus.NO_CONTENT);
+        } else {
+            throw new ContactNotFoundException();
+        }
+    }
+
+    @Override
     public String contactUrlHelper(Contact contact, HttpServletRequest request) {
         StringBuilder resourcePath = new StringBuilder();
 

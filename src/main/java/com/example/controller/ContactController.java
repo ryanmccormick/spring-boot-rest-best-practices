@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.Request;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -50,6 +51,12 @@ public class ContactController {
     @RequestMapping(value = "contacts/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Contact> putUpdateContact(@PathVariable Long id, @RequestBody Contact contact) {
         return contactService.putUpdateContact(id, contact);
+    }
+
+    // Delete Contact
+    @RequestMapping(value = "contacts/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Contact> deleteContact(@PathVariable Long id) {
+        return contactService.deleteContact(id);
     }
 
 

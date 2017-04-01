@@ -2,12 +2,11 @@ package com.example.controller;
 
 import com.example.Repository.ContactRepository;
 import com.example.model.Contact;
+import com.example.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,13 +19,18 @@ import java.util.List;
 public class ContactController {
 
     @Autowired
-    private ContactRepository contactRepository;
+    private ContactService contactService;
 
-
+    // List All Contacts
     @RequestMapping(value = "contacts", method = RequestMethod.GET)
-    public ResponseEntity<List<Contact>> getAllContacts() {
-        List<Contact> allContacts = contactRepository.findAll();
-        return new ResponseEntity<List<Contact>>(allContacts, HttpStatus.OK);
+    public ResponseEntity<List<Contact>> getAllContacts() throws Throwable {
+        return contactService.getAllContactsResponse();
+    }
+
+    // List One Contact
+    @RequestMapping(value = "contacts/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Contact> getSingleContact(@PathVariable Long id) throws Throwable {
+        return contactService.getSingleContactResponse(id);
     }
 
 

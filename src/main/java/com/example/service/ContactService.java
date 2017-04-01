@@ -12,6 +12,7 @@ import java.util.List;
  */
 
 public interface ContactService {
+
     public ResponseEntity<List<Contact>> getAllContactsResponse();
     public ResponseEntity<Contact> getSingleContactResponse(Long id);
     public ResponseEntity<Contact> createNewContact(Contact contact, HttpServletRequest request);

@@ -101,8 +101,11 @@ public class ContactServiceImpl implements ContactService {
         return new ResponseEntity<Contact>(HttpStatus.NO_CONTENT);
     }
 
-    @Override
-    public String contactUrlHelper(Contact contact, HttpServletRequest request) {
+    /*
+    * Private Methods
+    */
+
+    private String contactUrlHelper(Contact contact, HttpServletRequest request) {
         StringBuilder resourcePath = new StringBuilder();
 
         resourcePath.append(request.getRequestURL());

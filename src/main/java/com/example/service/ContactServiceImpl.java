@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -20,11 +21,18 @@ import java.util.List;
 @Service
 public class ContactServiceImpl implements ContactService {
 
-    @Autowired
     private ContactRepository contactRepository;
 
-    @Autowired
     private ApiUtils apiUtils;
+
+    @Autowired
+    public ContactServiceImpl(ContactRepository contactRepository, ApiUtils apiUtils) {
+        Assert.notNull(contactRepository, "ContactRepository must not be null!");
+        Assert.notNull(apiUtils, "ApiUtils must not be null!");
+        this.contactRepository = contactRepository;
+        this.apiUtils = apiUtils;
+    }
+
 
     @Override
     public ResponseEntity<List<Contact>> getAllContactsResponse() {
@@ -34,13 +42,8 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ResponseEntity<Contact> getSingleContactResponse(Long id) {
-        Contact getContact = contactRepository.findOne(id);
-
-        if(null != getContact) {
-            return new ResponseEntity<Contact>(getContact, HttpStatus.OK);
-        } else {
-            throw new ContactNotFoundException();
-        }
+        Contact getContact = findContactIfExists(id);
+        return new ResponseEntity<Contact>(getContact, HttpStatus.OK);
     }
 
     @Override
@@ -57,60 +60,45 @@ public class ContactServiceImpl implements ContactService {
         }
     }
 
-    // TODO: Refactor this mess
     @Override
     public ResponseEntity<Contact> patchUpdateContact(Long id, Contact contactUpdates) {
-        Contact existingContact = contactRepository.findOne(id);
+        Contact existingContact = findContactIfExists(id);
 
-        if(null != existingContact) {
-            apiUtils.merge(existingContact, contactUpdates);
+        apiUtils.merge(existingContact, contactUpdates);
 
-            // Ensure ID remains unchanged
-            existingContact.setId(id);
+        // Ensure ID remains unchanged
+        existingContact.setId(id);
 
-            if(existingContact.getFirstName().length() > 0) {
-                Contact updatedContact = contactRepository.saveAndFlush(existingContact);
-                return new ResponseEntity<Contact>(updatedContact, HttpStatus.OK);
-            } else {
-                throw new ContactMissingInformationException();
-            }
-
+        if(existingContact.getFirstName().length() > 0) {
+            Contact updatedContact = contactRepository.saveAndFlush(existingContact);
+            return new ResponseEntity<Contact>(updatedContact, HttpStatus.OK);
         } else {
-            throw new ContactNotFoundException();
+            throw new ContactMissingInformationException();
         }
     }
 
     @Override
     public ResponseEntity<Contact> putUpdateContact(Long id, Contact contactUpdates) {
-        Contact existingContact = contactRepository.findOne(id);
+        Contact existingContact = findContactIfExists(id);
 
-        if(null != existingContact) {
-            if(null != contactUpdates.getFirstName() && contactUpdates.getFirstName().length() > 0) {
-                BeanUtils.copyProperties(contactUpdates, existingContact);
+        if(null != contactUpdates.getFirstName() && contactUpdates.getFirstName().length() > 0) {
+            BeanUtils.copyProperties(contactUpdates, existingContact);
 
-                // Ensure ID remains unchanged
-                existingContact.setId(id);
+            // Ensure ID remains unchanged
+            existingContact.setId(id);
 
-                Contact updatedContact = contactRepository.saveAndFlush(existingContact);
-                return new ResponseEntity<Contact>(updatedContact, HttpStatus.OK);
-            } else {
-                throw new ContactMissingInformationException();
-            }
+            Contact updatedContact = contactRepository.saveAndFlush(existingContact);
+            return new ResponseEntity<Contact>(updatedContact, HttpStatus.OK);
         } else {
-            throw new ContactNotFoundException();
+            throw new ContactMissingInformationException();
         }
     }
 
     @Override
     public ResponseEntity<Contact> deleteContact(Long id) {
-        Contact existingContact = contactRepository.findOne(id);
-
-        if(null != existingContact) {
-            contactRepository.delete(id);
-            return new ResponseEntity<Contact>(HttpStatus.NO_CONTENT);
-        } else {
-            throw new ContactNotFoundException();
-        }
+        Contact existingContact = findContactIfExists(id);
+        contactRepository.delete(id);
+        return new ResponseEntity<Contact>(HttpStatus.NO_CONTENT);
     }
 
     @Override
@@ -123,4 +111,16 @@ public class ContactServiceImpl implements ContactService {
 
         return resourcePath.toString();
     }
+
+    private Contact findContactIfExists(Long id) {
+        Contact existingContact = contactRepository.findOne(id);
+
+        if(null != existingContact) {
+            return existingContact;
+        } else {
+            throw new ContactNotFoundException();
+        }
+    }
+
+
 }

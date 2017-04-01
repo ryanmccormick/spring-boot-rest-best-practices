@@ -26,6 +26,10 @@ public class Contact {
         this.phone = phone;
     }
 
+    public Contact() {
+
+    }
+
     public Long getId() {
         return id;
     }

@@ -4,6 +4,7 @@ import com.example.Repository.ContactRepository;
 import com.example.exceptions.ContactMissingInformationException;
 import com.example.exceptions.ContactNotFoundException;
 import com.example.model.Contact;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ public class ContactServiceImpl implements ContactService {
 
     @Autowired
     private ContactRepository contactRepository;
+
+    @Autowired
+    private ApiUtils apiUtils;
 
     @Override
     public ResponseEntity<List<Contact>> getAllContactsResponse() {
@@ -50,6 +54,48 @@ public class ContactServiceImpl implements ContactService {
             return new ResponseEntity<Contact>(newContact, responseHeaders, HttpStatus.CREATED);
         } else {
             throw new ContactMissingInformationException();
+        }
+    }
+
+    @Override
+    public ResponseEntity<Contact> patchUpdateContact(Long id, Contact contactUpdates) {
+        Contact existingContact = contactRepository.findOne(id);
+
+        if(null != existingContact) {
+            if(null != contactUpdates.getFirstName() && contactUpdates.getFirstName().length() > 0) {
+                apiUtils.merge(existingContact, contactUpdates);
+
+                // Ensure ID remains unchanged
+                existingContact.setId(id);
+
+                Contact updatedContact = contactRepository.saveAndFlush(existingContact);
+                return new ResponseEntity<Contact>(updatedContact, HttpStatus.OK);
+            } else {
+                throw new ContactMissingInformationException();
+            }
+        } else {
+            throw new ContactNotFoundException();
+        }
+    }
+
+    @Override
+    public ResponseEntity<Contact> putUpdateContact(Long id, Contact contactUpdates) {
+        Contact existingContact = contactRepository.findOne(id);
+
+        if(null != existingContact) {
+            if(null != contactUpdates.getFirstName() && contactUpdates.getFirstName().length() > 0) {
+                BeanUtils.copyProperties(contactUpdates, existingContact);
+
+                // Ensure ID remains unchanged
+                existingContact.setId(id);
+
+                Contact updatedContact = contactRepository.saveAndFlush(existingContact);
+                return new ResponseEntity<Contact>(updatedContact, HttpStatus.OK);
+            } else {
+                throw new ContactMissingInformationException();
+            }
+        } else {
+            throw new ContactNotFoundException();
         }
     }
 

@@ -1,6 +1,8 @@
 package com.example.integration;
 
 import com.example.model.Contact;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -41,6 +43,22 @@ public class TestHelper {
 
     public String contactUrlHelper(String resourceUrl, String resourceId) {
         return resourceUrl + "/" + resourceId;
+    }
+
+    public JSONObject constructContact(String firstName, String lastName, String phone) {
+        JSONObject contactBody = new JSONObject();
+
+        try {
+            if(null != firstName) {
+                contactBody.put("firstName", firstName);
+            }
+            contactBody.put("lastName", lastName);
+            contactBody.put("phone", phone);
+
+            return contactBody;
+        } catch(JSONException e) {
+            return null;
+        }
     }
 
 }

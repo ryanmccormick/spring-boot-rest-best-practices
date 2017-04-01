@@ -2,11 +2,10 @@ package com.example.integration;
 
 import com.example.Repository.ContactRepository;
 import com.example.model.Contact;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.client.RestTemplate;
-
-import javax.xml.ws.Response;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -35,7 +29,6 @@ import static org.hamcrest.CoreMatchers.containsString;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CreateContactsTest {
 
-    // TODO: Basic JSON Post Test
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -46,22 +39,6 @@ public class CreateContactsTest {
     private TestHelper testHelper;
 
     private Contact createdContact;
-
-    public JSONObject constructContact(String firstName, String lastName, String phone) {
-        JSONObject contactBody = new JSONObject();
-
-        try {
-            if(null != firstName) {
-                contactBody.put("firstName", firstName);
-            }
-            contactBody.put("lastName", lastName);
-            contactBody.put("phone", phone);
-
-            return contactBody;
-        } catch(JSONException e) {
-            return null;
-        }
-    }
 
     @After
     public void cleanup() {
@@ -77,7 +54,7 @@ public class CreateContactsTest {
         String lastName = "Smith";
         String phone = "555-555-5555";
 
-        JSONObject postBody = constructContact(firstName, lastName, phone);
+        JSONObject postBody = testHelper.constructContact(firstName, lastName, phone);
 
         ResponseEntity<Contact> responseEntity =
                 restTemplate.exchange(resourceUrl, HttpMethod.POST, testHelper.getPostRequestHeaders(postBody.toString()), Contact.class);
@@ -103,7 +80,7 @@ public class CreateContactsTest {
         String lastName = "Smith";
         String phone = "555-555-5555";
 
-        JSONObject postBody = constructContact(null, lastName, phone);
+        JSONObject postBody = testHelper.constructContact(null, lastName, phone);
 
         ResponseEntity<Contact> responseEntity =
                 restTemplate.exchange(resourceUrl, HttpMethod.POST, testHelper.getPostRequestHeaders(postBody.toString()), Contact.class);

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,6 +33,13 @@ public class ContactController {
     public ResponseEntity<Contact> getSingleContact(@PathVariable Long id) throws Throwable {
         return contactService.getSingleContactResponse(id);
     }
+
+    // Create New Contact
+    @RequestMapping(value = "contacts", method = RequestMethod.POST)
+    public ResponseEntity<Contact> createNewContact(@RequestBody Contact contact, HttpServletRequest req) {
+        return contactService.createNewContact(contact, req);
+    }
+
 
 
 }

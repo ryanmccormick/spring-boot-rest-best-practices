@@ -25,6 +25,14 @@ public class ExceptionHandlers {
         return new ErrorResponse("CONTACT_NOT_FOUND", "The contact was not found");
     }
 
+    @ExceptionHandler(ContactMissingInformationException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseBody
+    public ErrorResponse handleContactMissingInformationException(final ContactNotFoundException ex) {
+        log.error("Contact missing information thrown");
+        return new ErrorResponse("MISSING_INFORMATION", "You must include a first name");
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
     @ResponseBody

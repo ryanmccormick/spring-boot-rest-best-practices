@@ -4,6 +4,7 @@ import com.example.model.Contact;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -14,6 +15,8 @@ public interface ContactService {
 
     public ResponseEntity<List<Contact>> getAllContactsResponse();
     public ResponseEntity<Contact> getSingleContactResponse(Long id);
+    public ResponseEntity<Contact> createNewContact(Contact contact, HttpServletRequest request);
+    public String contactUrlHelper(Contact contact, HttpServletRequest request);
 
 
 }

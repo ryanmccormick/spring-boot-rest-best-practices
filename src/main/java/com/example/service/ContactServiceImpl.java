@@ -57,22 +57,24 @@ public class ContactServiceImpl implements ContactService {
         }
     }
 
+    // TODO: Refactor this mess
     @Override
     public ResponseEntity<Contact> patchUpdateContact(Long id, Contact contactUpdates) {
         Contact existingContact = contactRepository.findOne(id);
 
         if(null != existingContact) {
-            if(null != contactUpdates.getFirstName() && contactUpdates.getFirstName().length() > 0) {
-                apiUtils.merge(existingContact, contactUpdates);
+            apiUtils.merge(existingContact, contactUpdates);
 
-                // Ensure ID remains unchanged
-                existingContact.setId(id);
+            // Ensure ID remains unchanged
+            existingContact.setId(id);
 
+            if(existingContact.getFirstName().length() > 0) {
                 Contact updatedContact = contactRepository.saveAndFlush(existingContact);
                 return new ResponseEntity<Contact>(updatedContact, HttpStatus.OK);
             } else {
                 throw new ContactMissingInformationException();
             }
+
         } else {
             throw new ContactNotFoundException();
         }

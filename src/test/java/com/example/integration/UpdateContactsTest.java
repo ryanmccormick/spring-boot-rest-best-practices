@@ -102,6 +102,26 @@ public class UpdateContactsTest {
         assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType());
     }
 
+    @Test
+    public void updateContactOnePhoneNumberWithPatch() throws Throwable {
+        String resourceUrl = "/api/v1/contacts/" + contact1.getId().toString();
+
+        JSONObject updateBody = new JSONObject();
+        updateBody.put("phone", "123456");
+
+        ResponseEntity<Contact> responseEntity =
+                patchRestTemplate.exchange(resourceUrl, HttpMethod.PATCH, testHelper.getPostRequestHeaders(updateBody.toString()), Contact.class);
+
+        // Check for proper status
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON_UTF8, responseEntity.getHeaders().getContentType());
+
+        // Check for proper body
+        Contact updatedContact = responseEntity.getBody();
+        assertEquals("Smith", updatedContact.getLastName());
+        assertEquals("123456", updatedContact.getPhone());
+    }
+
 
     @Test
     public void updateContactTwoWithPut() throws Throwable {

@@ -1,4 +1,4 @@
-package com.example.Repository;
+package com.example.repository;
 
 /**
  * Created by ryan on 3/31/17.

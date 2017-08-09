@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.model.Contact;
+import com.example.vo.SimpleContact;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 public interface ContactService {
 
-    public ResponseEntity<List<Contact>> getAllContactsResponse();
+    public ResponseEntity<List<SimpleContact>> getAllContactsResponse();
     public ResponseEntity<Contact> getSingleContactResponse(Long id);
     public ResponseEntity<Contact> createNewContact(Contact contact, HttpServletRequest request);
     public ResponseEntity<Contact> patchUpdateContact(Long id, Contact contactUpdates);

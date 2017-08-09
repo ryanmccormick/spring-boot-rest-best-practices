@@ -1,9 +1,10 @@
 package com.example.service;
 
-import com.example.Repository.ContactRepository;
+import com.example.repository.ContactRepository;
 import com.example.exceptions.ContactMissingInformationException;
 import com.example.exceptions.ContactNotFoundException;
 import com.example.model.Contact;
+import com.example.vo.SimpleContact;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by ryan on 3/31/17.
@@ -35,9 +38,17 @@ public class ContactServiceImpl implements ContactService {
 
 
     @Override
-    public ResponseEntity<List<Contact>> getAllContactsResponse() {
+    public ResponseEntity<List<SimpleContact>> getAllContactsResponse() {
+//        List<Contact> allContacts = contactRepository.findAll();
+//        return new ResponseEntity<List<Contact>>(allContacts, HttpStatus.OK);
+
+
         List<Contact> allContacts = contactRepository.findAll();
-        return new ResponseEntity<List<Contact>>(allContacts, HttpStatus.OK);
+        List<SimpleContact> allSimpleContacts = allContacts.stream().map(objA -> {
+            return new SimpleContact(objA);
+        }).collect(Collectors.toList());
+
+        return new ResponseEntity<List<SimpleContact>>(allSimpleContacts, HttpStatus.OK);
     }
 
     @Override

@@ -39,10 +39,6 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ResponseEntity<List<SimpleContact>> getAllContactsResponse() {
-//        List<Contact> allContacts = contactRepository.findAll();
-//        return new ResponseEntity<List<Contact>>(allContacts, HttpStatus.OK);
-
-
         List<Contact> allContacts = contactRepository.findAll();
         List<SimpleContact> allSimpleContacts = allContacts.stream().map(objA -> {
             return new SimpleContact(objA);

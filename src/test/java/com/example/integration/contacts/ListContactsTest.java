@@ -1,6 +1,6 @@
 package com.example.integration.contacts;
 
-import com.example.Repository.ContactRepository;
+import com.example.repository.ContactRepository;
 import com.example.model.Contact;
 import org.junit.After;
 import org.junit.Before;

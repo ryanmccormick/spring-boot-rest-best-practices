@@ -1,6 +1,6 @@
 package com.example.integration.contacts;
 
-import com.example.Repository.ContactRepository;
+import com.example.repository.ContactRepository;
 import com.example.model.Contact;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
